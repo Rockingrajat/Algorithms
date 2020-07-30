@@ -1,0 +1,54 @@
+Assign 3:
+Note that the output polynomial should have exactly 2n-1 entries, even if the last entries are 0. The degree of the polynomial will be at most 2n-2. Make sure that in your final submission you read the polynomials from cin and print out to cout.
+
+If you are not familiar with vectors and iterators, you can just use arrays and indices instead. This will not affect the running time much.
+
+Assign 5:
+NOTE : If a program with a pending request is terminated, the answer for that request must be -1.
+Also if it had at least one request allocated, the answer for the terminate command must  be 0, otherwise 1.
+
+Assign 6:
+HINT
+
+Consider the cycles in the given permutation formed by  i --> j if element in the ith position has to go the jth position. In the given example, the cycle is 0 --> 7 --> 5 --> 4 --> 1 --> 2--> 6 --> 3 --> 0.
+
+In general there will be many cycles, solve the problem separately for each.
+
+Note that the cycle indicates which elements have to move right and which have to move left.  Start with 0 and consider increasing and decreasing substrings in the cycle. Use these to find which swaps to use. You can always sort a single cycle of length n in exactly n-1 swaps.
+
+Also, there is always a solution in which the two smallest indices in a cycle are swapped.
+
+To find one possible sequence of swaps, start putting elements in the cycle, starting from the element  0, into a stack. The stack will contains elements in increasing order. Whenever a new element occurs decide whether to push it in the stack or pop some elements. Whenever an element is popped, we get one valid swap.
+
+
+
+NOTE: YOU WILL GET 1/2 CREDIT IF YOU IMPLEMENT AN O(n^2) time algorithm.
+
+NOTE: There are some BASIC errors that many people seem to be committing. The cost and also the maximum distance between elements could be larger than an int. Should use a long long int for these. You cannot declare an array int a[n], where n is a variable in the main function. Variables in the main function are statically allocated, and their size should be known at compile time. The compiler may be allocating some default size to such arrays, but this will not work for large n. It will give a segmentation fault. You should either use vectors, or use pointers and allocate arrays at run time. This may work in a function if n is a parameter, since local variables in a function are created only when it is called, and the value of the parameter is known. However, this is not allowed in standard C++. Also, since memory is limited for local variables, allocation of large arrays statically may not be possible.
+
+
+
+Some test cases are at www.cse.iitb.ac.in/~aad/cs293/Assign6/
+
+Since the output is not unique, there is a program check.cpp to check the correctness of the output for a given input. Compile it and run it as ./a.out Output_filename Input_filename. It will indicate an error if the output is incorrect.
+
+
+Assign 9:
+HINT: Consider the red  point with the largest x-coordinate and among them the one with the largest y-coordinate. Claim: If there is a blue point to its right and above, there is always a solution in which this red point is paired with one of those blue points. Which one? Identify it, delete the two points and repeat the process. If there is no such blue point, delete the red point.
+
+You can also do this by considering the blue point with least x-coordinate and least y-coordinate among them. But be careful with using the built_in methods.
+
+Assign 10:
+HINT: There is a simple solution that somebody has suggested for the 1 3 2 problem. First find for each i, the number of such subsequences such that p_i < p_j < p_k.  This is easy to do using the inversion pairs algorithm. Also find for each i the number n_i of j such that p_j > p_i. Then number of subsequences of type 1 , 3, 2 starting with i = n_I(n_I-1)/2  minus the number of increasing subsequences starting from i.
+
+Note that the second part is the same as the first with p_i replaced by n+1-p_i.
+
+
+Assign 12:
+Here is one possible way of doing it. Consider a vertex which has no successor. All edges entering it are dead ends. Delete them. Suppose there is a vertex with only one successor. If there is an edge from that successor to this vertex, that is also a dead end.  Repeatedly keep doing this and updating the number of successors. You need to check efficiently whether the oppositely directed edge is present.
+
+After this step is over, every vertex has either 2 successors, or if it has only one, there is no edge entering it from that successor.  In this case, no edge will be a dead end.
+
+To do this efficiently maintain a queue of vertices with <= 1 successors. In one pass find all of them and put them in the queue. Whenever a new such vertex is found, add it to the queue.  Maintain the graph and its reverse as an adjacency list.  Whenever a vertex of degree 1 is deleted from the queue, to find which is its successor, traverse its adjacency list to find a successor that has not been deleted from the queue. Then check its predecessors list to see if it also a predecessor.
+
+Note that there is one complication.  A vertex which was processed with outdegree 1 may need to be processed again with outdegree 0.   So if it was queued with outdegree 1 and later its outdegree becomes 0, it must be queued again. This also creates a problem for deciding which successor is remaining.  A vertex may have been deleted from the queue with outdegree 1 but some other edge may have been deleted. So you may need to remember this also.
